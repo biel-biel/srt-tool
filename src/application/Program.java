@@ -7,9 +7,13 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
+
+import entities.Subtitle;
 
 public class Program {
 
@@ -32,6 +36,8 @@ public class Program {
 		BufferedReader br = null;
 		FileReader fr = null;
 		
+		List<Subtitle> subtitleList = new ArrayList<Subtitle>();
+		
 		try {
 			fr = new FileReader(originalSRTPath);
 			br = new BufferedReader(fr);
@@ -53,9 +59,28 @@ public class Program {
 						if (subtitleNumber == 1) {
 							timeBetween = startTime;
 							
+							List<String> subtitleStringList = new ArrayList<String>();
+							line = br.readLine();
+							while(!(line.isBlank())) {
+								subtitleStringList.add(line);
+								line = br.readLine();
+							}
+							
+							subtitleList.add(new Subtitle(startTime, endTime, timeBetween, subtitleNumber, subtitleStringList));
 						}
 						else {
+							startTime = sdf1.parse(line.substring(0, 12));
+							endTime = sdf1.parse(line.substring(17, 29));
+							timeBetween = new Date(startTime.getTime() - subtitleList.get(subtitleNumber-2).getEndTime().getTime());
 							
+							List<String> subtitleStringList = new ArrayList<String>();
+							line = br.readLine();
+							while(!(line.isBlank())) {
+								subtitleStringList.add(line);
+								line = br.readLine();
+							}
+							
+							subtitleList.add(new Subtitle(startTime, endTime, timeBetween, subtitleNumber, subtitleStringList));
 						}
 					}
 					catch (ParseException e) {
