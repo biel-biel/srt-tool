@@ -27,6 +27,7 @@ public class Program {
 		Locale.setDefault(Locale.US);
 		Scanner sc = new Scanner(System.in);
 		DateTimeFormatter fmt1 =  DateTimeFormatter.ofPattern("HH:mm:ss");
+		SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss,SSS");
 		
 		System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Project 'str-tool' by Gabriel Forneck");
 		
@@ -47,8 +48,6 @@ public class Program {
 			br = new BufferedReader(fr);
 			
 			String line = br.readLine();
-			
-			SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss,SSS");
 			
 			while(line != null) {
 				try {
@@ -134,9 +133,7 @@ public class Program {
 			System.out.print("> ");
 			Double timeChangePercentage = sc.nextDouble();
 			timeChangePercentage = timeChangePercentage/100;
-			System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Enter the path where the file will be saved:");
-			System.out.print("> ");
-			String modifiedSRTPath = sc.nextLine() + "output.srt";
+			sc.nextLine();
 			
 			System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Working...");
 			List<Subtitle> modifiedSubtitleList = new ArrayList<Subtitle>();
@@ -158,18 +155,26 @@ public class Program {
 				}
 			}
 			
+			System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Writing...");
 			
-			/*
-			try (BufferedWriter bw = new BufferedWriter(new FileWriter(modifiedSRTPath))) {
-				for (String line : lines) {
-					bw.write(line);
+			try (BufferedWriter bw = new BufferedWriter(new FileWriter("C:\\temp\\out.srt"))) {
+				for (Subtitle s : modifiedSubtitleList) {
+					System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Writing " + s.getSubtitleNumber());
+					bw.write(String.valueOf(s.getSubtitleNumber()));
+					bw.newLine();
+					bw.write(sdf1.format(s.getStartTime()) + " --> " + sdf1.format(s.getEndTime()));
+					bw.newLine();
+					for (String line : s.getSubtitleStringList()) {
+						bw.write(line);
+						bw.newLine();
+					}
 					bw.newLine();
 					}
 				}
 				catch (IOException e) {
 				e.printStackTrace();
+				error = true;
 			}
-			*/
 		}
 		else {
 			System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] Oops! Something bad happened. Cleaning up...");
@@ -182,6 +187,34 @@ public class Program {
 					e.printStackTrace();
 				}
 		}
+		
+		if (error == true) {
+			System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] Oops! Something bad happened. Cleaning up...");
+			try {
+				if (br != null)
+						br.close();
+				if (fr != null)
+						fr.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
+		
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] SUCCESS!");
+		System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] New file path: 'C:\\temp\\out.srt'!");
 		
 		sc.close();
 		System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/END] Program ended successfully");
