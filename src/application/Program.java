@@ -3,8 +3,11 @@ package application;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -35,21 +38,31 @@ public class Program {
 			
 			String line = br.readLine();
 			
-			DateTimeFormatter fmt2 =  DateTimeFormatter.ofPattern("HH:mm:ss,SSS");
+			SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss,SSS");
 			
 			while(line != null) {
 				try {
 					int subtitleNumber = Integer.parseInt(line);
-					LocalDateTime timeBetween;
+					Date timeBetween;
 					System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Reading " + subtitleNumber);
 					line = br.readLine();
+					
 					try {
-						LocalDateTime startTime = LocalDateTime.parse(line.substring(0, 12), fmt2);
-						LocalDateTime endTime = LocalDateTime.parse(line.substring(17, 29), fmt2);
+						Date startTime = sdf1.parse(line.substring(0, 12));
+						Date endTime = sdf1.parse(line.substring(17, 29));
 						if (subtitleNumber == 1) {
 							timeBetween = startTime;
 							
 						}
+						else {
+							
+						}
+					}
+					catch (ParseException e) {
+						System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] An error has occurred while reading the file.");
+						System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] Getting start and end time error.");
+						System.out.println(e.getMessage());
+						break;
 					}
 					catch (StringIndexOutOfBoundsException e) {
 						System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] An error has occurred while reading the file.");
