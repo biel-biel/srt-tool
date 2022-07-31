@@ -29,6 +29,7 @@ public class Subtitle {
 
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
+		duration = new Date(startTime.getTime() - endTime.getTime());
 	}
 
 	public Date getEndTime() {
@@ -37,6 +38,7 @@ public class Subtitle {
 
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
+		duration = new Date(startTime.getTime() - endTime.getTime());
 	}
 
 	public Date getDuration() {
@@ -61,10 +63,6 @@ public class Subtitle {
 	
 	public void remSubtitleStringList(String subtitle) {
 		subtitleStringList.remove(subtitle);
-	}
- 
-	public List<Subtitle> generateEditedSubtitleList(Double percentage) {
-		
 	}
 	
 }

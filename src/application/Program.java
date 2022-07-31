@@ -138,9 +138,28 @@ public class Program {
 			System.out.print("> ");
 			String modifiedSRTPath = sc.nextLine() + "output.srt";
 			
+			System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Working...");
 			List<Subtitle> modifiedSubtitleList = new ArrayList<Subtitle>();
 			
+			for (Subtitle s : subtitleList) {
+				System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Working " + s.getSubtitleNumber());
+				
+				if (s.getSubtitleNumber() == 1) {
+					Date timeBetween = new Date(Math.round(s.getTimeBetween().getTime() * timeChangePercentage));
+					Date startTime = timeBetween;
+					Date endTime = new Date(startTime.getTime() + Math.round(s.getDuration().getTime() * timeChangePercentage));
+					modifiedSubtitleList.add(new Subtitle(startTime, endTime, timeBetween, s.getSubtitleNumber(), s.getSubtitleStringList()));
+				}
+				else {
+					Date timeBetween = new Date(Math.round(s.getTimeBetween().getTime() * timeChangePercentage));
+					Date startTime = new Date(subtitleList.get(s.getSubtitleNumber()-2).getEndTime().getTime() + s.getTimeBetween().getTime());
+					Date endTime = new Date(startTime.getTime() + Math.round(s.getDuration().getTime() * timeChangePercentage));
+					modifiedSubtitleList.add(new Subtitle(startTime, endTime, timeBetween, s.getSubtitleNumber(), s.getSubtitleStringList()));
+				}
+			}
 			
+			
+			/*
 			try (BufferedWriter bw = new BufferedWriter(new FileWriter(modifiedSRTPath))) {
 				for (String line : lines) {
 					bw.write(line);
@@ -150,6 +169,7 @@ public class Program {
 				catch (IOException e) {
 				e.printStackTrace();
 			}
+			*/
 		}
 		else {
 			System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] Oops! Something bad happened. Cleaning up...");
