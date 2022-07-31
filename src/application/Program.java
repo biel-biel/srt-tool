@@ -1,7 +1,9 @@
 package application;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,6 +32,7 @@ public class Program {
 		
 		System.out.println();
 		System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Enter the path of the .srt file:");
+		System.out.print("> ");
 		String originalSRTPath = sc.nextLine();
 		
 		System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Reading...");
@@ -37,6 +40,7 @@ public class Program {
 		FileReader fr = null;
 		
 		List<Subtitle> subtitleList = new ArrayList<Subtitle>();
+		boolean error = false;
 		
 		try {
 			fr = new FileReader(originalSRTPath);
@@ -87,12 +91,14 @@ public class Program {
 						System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] An error has occurred while reading the file.");
 						System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] Getting start and end time error.");
 						System.out.println(e.getMessage());
+						error = true;
 						break;
 					}
 					catch (StringIndexOutOfBoundsException e) {
 						System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] An error has occurred while reading the file.");
 						System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] Getting start and end time error.");
 						System.out.println(e.getMessage());
+						error = true;
 						break;
 					}
 				}
@@ -100,6 +106,7 @@ public class Program {
 					System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] An error has occurred while reading the file.");
 					System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] Getting subtitle number error.");
 					System.out.println(e.getMessage());
+					error = true;
 					break;
 				}
 				line = br.readLine();
@@ -110,6 +117,42 @@ public class Program {
 			System.out.println(e.getMessage());
 		}
 		finally {
+			try {
+				if (br != null)
+						br.close();
+				if (fr != null)
+						fr.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		}
+		
+		if (error == false) {
+			System.out.println("");
+			System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Success! :)");
+			System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Enter the time change percentage:");
+			System.out.print("> ");
+			Double timeChangePercentage = sc.nextDouble();
+			timeChangePercentage = timeChangePercentage/100;
+			System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Enter the path where the file will be saved:");
+			System.out.print("> ");
+			String modifiedSRTPath = sc.nextLine() + "output.srt";
+			
+			List<Subtitle> modifiedSubtitleList = new ArrayList<Subtitle>();
+			
+			
+			try (BufferedWriter bw = new BufferedWriter(new FileWriter(modifiedSRTPath))) {
+				for (String line : lines) {
+					bw.write(line);
+					bw.newLine();
+					}
+				}
+				catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] Oops! Something bad happened. Cleaning up...");
 			try {
 				if (br != null)
 						br.close();
