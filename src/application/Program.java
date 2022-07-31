@@ -17,15 +17,15 @@ public class Program {
 		
 		Locale.setDefault(Locale.US);
 		Scanner sc = new Scanner(System.in);
-		DateTimeFormatter fmt =  DateTimeFormatter.ofPattern("HH:mm:ss");
+		DateTimeFormatter fmt1 =  DateTimeFormatter.ofPattern("HH:mm:ss");
 		
-		System.out.println("[" + fmt.format(LocalDateTime.now()) + "] [System/main/INFO] Project 'str-tool' by Gabriel Forneck");
+		System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Project 'str-tool' by Gabriel Forneck");
 		
 		System.out.println();
-		System.out.println("[" + fmt.format(LocalDateTime.now()) + "] [System/main/INFO] Enter the path of the .srt file:");
+		System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Enter the path of the .srt file:");
 		String originalSRTPath = sc.nextLine();
 		
-		System.out.println("[" + fmt.format(LocalDateTime.now()) + "] [System/main/INFO] Reading...");
+		System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Reading...");
 		BufferedReader br = null;
 		FileReader fr = null;
 		
@@ -35,14 +35,43 @@ public class Program {
 			
 			String line = br.readLine();
 			
+			DateTimeFormatter fmt2 =  DateTimeFormatter.ofPattern("HH:mm:ss,SSS");
+			
 			while(line != null) {
-				System.out.println(line);
+				try {
+					int subtitleNumber = Integer.parseInt(line);
+					LocalDateTime timeBetween;
+					System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Reading " + subtitleNumber);
+					line = br.readLine();
+					try {
+						LocalDateTime startTime = LocalDateTime.parse(line.substring(0, 12), fmt2);
+						LocalDateTime endTime = LocalDateTime.parse(line.substring(17, 29), fmt2);
+						if (subtitleNumber == 1) {
+							timeBetween = startTime;
+							
+						}
+					}
+					catch (StringIndexOutOfBoundsException e) {
+						System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] An error has occurred while reading the file.");
+						System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] Getting start and end time error.");
+						System.out.println(e.getMessage());
+						break;
+					}
+				}
+				catch (NumberFormatException e) {
+					System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] An error has occurred while reading the file.");
+					System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] Getting subtitle number error.");
+					System.out.println(e.getMessage());
+					break;
+				}
 				line = br.readLine();
 			}
-		} catch (IOException e) {
-			System.out.println("[" + fmt.format(LocalDateTime.now()) + "] [System/main/ERROR] An error has occurred while reading the file:");
+		}
+		catch (IOException e) {
+			System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] An error has occurred while reading the file:");
 			System.out.println(e.getMessage());
-		} finally {
+		}
+		finally {
 			try {
 				if (br != null)
 						br.close();
@@ -54,7 +83,7 @@ public class Program {
 		}
 		
 		sc.close();
-		System.out.println("[" + fmt.format(LocalDateTime.now()) + "] [System/main/END] Program ended successfully");
+		System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/END] Program ended successfully");
 	}
 
 }
