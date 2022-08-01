@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.TimeZone;
 
 import entities.Subtitle;
 
@@ -28,6 +29,7 @@ public class Program {
 		Scanner sc = new Scanner(System.in);
 		DateTimeFormatter fmt1 =  DateTimeFormatter.ofPattern("HH:mm:ss");
 		SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss,SSS");
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 		
 		System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Project 'str-tool' by Gabriel Forneck");
 		
@@ -70,6 +72,7 @@ public class Program {
 							}
 							
 							subtitleList.add(new Subtitle(startTime, endTime, timeBetween, subtitleNumber, subtitleStringList));
+							
 						}
 						else {
 							startTime = sdf1.parse(line.substring(0, 12));
@@ -85,6 +88,7 @@ public class Program {
 							
 							subtitleList.add(new Subtitle(startTime, endTime, timeBetween, subtitleNumber, subtitleStringList));
 						}
+						
 					}
 					catch (ParseException e) {
 						System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/ERROR] An error has occurred while reading the file.");
@@ -142,15 +146,19 @@ public class Program {
 				System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Working " + s.getSubtitleNumber());
 				
 				if (s.getSubtitleNumber() == 1) {
+					/*
 					Date timeBetween = new Date(Math.round(s.getTimeBetween().getTime() * timeChangePercentage));
 					Date startTime = timeBetween;
 					Date endTime = new Date(startTime.getTime() + Math.round(s.getDuration().getTime() * timeChangePercentage));
 					modifiedSubtitleList.add(new Subtitle(startTime, endTime, timeBetween, s.getSubtitleNumber(), s.getSubtitleStringList()));
+					*/
+					modifiedSubtitleList.add(new Subtitle(new Date(40000), new Date(40000), new Date(40000), new Date(0), s.getSubtitleNumber(), s.getSubtitleStringList()));
+					
 				}
 				else {
 					Date timeBetween = new Date(Math.round(s.getTimeBetween().getTime() * timeChangePercentage));
-					Date startTime = new Date(subtitleList.get(s.getSubtitleNumber()-2).getEndTime().getTime() + s.getTimeBetween().getTime());
-					Date endTime = new Date(startTime.getTime() + Math.round(s.getDuration().getTime() * timeChangePercentage));
+					Date startTime = new Date(Math.round(modifiedSubtitleList.get(s.getSubtitleNumber()-2).getEndTime().getTime() + Math.round(s.getTimeBetween().getTime() * timeChangePercentage)));
+					Date endTime = new Date(Math.round(startTime.getTime() + Math.round(s.getDuration().getTime() * timeChangePercentage)));
 					modifiedSubtitleList.add(new Subtitle(startTime, endTime, timeBetween, s.getSubtitleNumber(), s.getSubtitleStringList()));
 				}
 			}
@@ -162,7 +170,7 @@ public class Program {
 					System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Writing " + s.getSubtitleNumber());
 					bw.write(String.valueOf(s.getSubtitleNumber()));
 					bw.newLine();
-					bw.write(sdf1.format(s.getStartTime()) + " --> " + sdf1.format(s.getEndTime()));
+					bw.write(sdf1.format(new Date(Math.round(s.getStartTime().getTime() - 3600 * 21000))) + " --> " + sdf1.format(new Date(Math.round(s.getEndTime().getTime() - 3600 * 21000))));
 					bw.newLine();
 					for (String line : s.getSubtitleStringList()) {
 						bw.write(line);

@@ -3,6 +3,7 @@ package entities;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class Subtitle {
 	
@@ -15,12 +16,24 @@ public class Subtitle {
 	
 	public Subtitle(Date startTime, Date endTime, Date timeBetween, Integer subtitleNumber,
 			List<String> subtitleStringList) {
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.timeBetween = timeBetween;
 		this.subtitleNumber = subtitleNumber;
 		this.subtitleStringList = subtitleStringList;
-		this.duration = new Date(startTime.getTime() - endTime.getTime());
+		this.duration = new Date(this.endTime.getTime() - this.startTime.getTime());
+	}
+	
+	public Subtitle(Date startTime, Date endTime, Date timeBetween, Date duration, Integer subtitleNumber,
+			List<String> subtitleStringList) {
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+		this.startTime = startTime;
+		this.endTime = endTime;
+		this.timeBetween = timeBetween;
+		this.subtitleNumber = subtitleNumber;
+		this.subtitleStringList = subtitleStringList;
+		this.duration = duration;
 	}
 	
 	public Date getStartTime() {
@@ -29,7 +42,7 @@ public class Subtitle {
 
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
-		duration = new Date(startTime.getTime() - endTime.getTime());
+		duration = new Date(endTime.getTime() - startTime.getTime());
 	}
 
 	public Date getEndTime() {
@@ -38,7 +51,7 @@ public class Subtitle {
 
 	public void setEndTime(Date endTime) {
 		this.endTime = endTime;
-		duration = new Date(startTime.getTime() - endTime.getTime());
+		duration = new Date(endTime.getTime() - startTime.getTime());
 	}
 
 	public Date getDuration() {
