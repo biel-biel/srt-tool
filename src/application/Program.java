@@ -29,7 +29,7 @@ public class Program {
 		Scanner sc = new Scanner(System.in);
 		DateTimeFormatter fmt1 =  DateTimeFormatter.ofPattern("HH:mm:ss");
 		SimpleDateFormat sdf1 = new SimpleDateFormat("HH:mm:ss,SSS");
-		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+		sdf1.setTimeZone(TimeZone.getTimeZone("GMT"));
 		
 		System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Project 'str-tool' by Gabriel Forneck");
 		
@@ -146,13 +146,11 @@ public class Program {
 				System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Working " + s.getSubtitleNumber());
 				
 				if (s.getSubtitleNumber() == 1) {
-					/*
+					
 					Date timeBetween = new Date(Math.round(s.getTimeBetween().getTime() * timeChangePercentage));
 					Date startTime = timeBetween;
 					Date endTime = new Date(startTime.getTime() + Math.round(s.getDuration().getTime() * timeChangePercentage));
 					modifiedSubtitleList.add(new Subtitle(startTime, endTime, timeBetween, s.getSubtitleNumber(), s.getSubtitleStringList()));
-					*/
-					modifiedSubtitleList.add(new Subtitle(new Date(40000), new Date(40000), new Date(40000), new Date(0), s.getSubtitleNumber(), s.getSubtitleStringList()));
 					
 				}
 				else {
@@ -170,7 +168,7 @@ public class Program {
 					System.out.println("[" + fmt1.format(LocalDateTime.now()) + "] [System/main/INFO] Writing " + s.getSubtitleNumber());
 					bw.write(String.valueOf(s.getSubtitleNumber()));
 					bw.newLine();
-					bw.write(sdf1.format(new Date(Math.round(s.getStartTime().getTime() - 3600 * 21000))) + " --> " + sdf1.format(new Date(Math.round(s.getEndTime().getTime() - 3600 * 21000))));
+					bw.write(sdf1.format(new Date(Math.round(s.getStartTime().getTime()))) + " --> " + sdf1.format(new Date(Math.round(s.getEndTime().getTime()))));
 					bw.newLine();
 					for (String line : s.getSubtitleStringList()) {
 						bw.write(line);

@@ -25,17 +25,6 @@ public class Subtitle {
 		this.duration = new Date(this.endTime.getTime() - this.startTime.getTime());
 	}
 	
-	public Subtitle(Date startTime, Date endTime, Date timeBetween, Date duration, Integer subtitleNumber,
-			List<String> subtitleStringList) {
-		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-		this.startTime = startTime;
-		this.endTime = endTime;
-		this.timeBetween = timeBetween;
-		this.subtitleNumber = subtitleNumber;
-		this.subtitleStringList = subtitleStringList;
-		this.duration = duration;
-	}
-	
 	public Date getStartTime() {
 		return startTime;
 	}
