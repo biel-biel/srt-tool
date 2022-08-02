@@ -24,6 +24,7 @@ public class Program {
 		// TODO Auto-generated method stub
 		
 		System.out.println("Starting program...");
+		System.out.println("v1.0");
 		
 		Locale.setDefault(Locale.US);
 		Scanner sc = new Scanner(System.in);
